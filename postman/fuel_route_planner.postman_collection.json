@@ -1,0 +1,277 @@
+{
+  "info": {
+    "name": "Fuel Route Planner",
+    "description": "POST /api/route/ demos. Start the server with `python manage.py runserver` first.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Successful trips",
+      "item": [
+        {
+          "name": "1. Short trip - no fuel stop (Austin → Dallas)",
+          "request": {
+            "method": "POST",
+            "description": "~195 miles: within the 500-mile range of a full tank, so no stop and $0 spent.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Austin, TX\",\n  \"finish\": \"Dallas, TX\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Price-driven stops (New York → Chicago)",
+          "request": {
+            "method": "POST",
+            "description": "~790 miles. Buys only a few gallons at Youngstown, OH, just enough to reach cheaper fuel in Toledo, OH.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"New York, NY\",\n  \"finish\": \"Chicago, IL\",\n  \"include_geometry\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Long trip - many stops (New York → Los Angeles)",
+          "request": {
+            "method": "POST",
+            "description": "~2,800 miles across the country with multiple fuel stops.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"New York, NY\",\n  \"finish\": \"Los Angeles, CA\",\n  \"include_geometry\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Full response with route geometry (Austin → Dallas)",
+          "request": {
+            "method": "POST",
+            "description": "Includes the GeoJSON LineString for drawing the route on a map.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Austin, TX\",\n  \"finish\": \"Dallas, TX\",\n  \"include_geometry\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "5. Location outside the USA (Toronto)",
+          "request": {
+            "method": "POST",
+            "description": "422 location_outside_usa, with US suggestions.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Toronto\",\n  \"finish\": \"Chicago, IL\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. Unknown location",
+          "request": {
+            "method": "POST",
+            "description": "422 location_not_found.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Xyzzyplughville\",\n  \"finish\": \"Chicago, IL\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "7. Missing finish",
+          "request": {
+            "method": "POST",
+            "description": "400 invalid_request.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Austin, TX\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "8. Malformed JSON",
+          "request": {
+            "method": "POST",
+            "description": "400 malformed_json.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"start\": \"Austin, TX\","
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "9. No fuel plan possible (California data gap)",
+          "request": {
+            "method": "POST",
+            "description": "The supplied fuel data has almost no California stations, so a long in-state trip can't be planned: 422 no_feasible_fuel_plan.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"San Diego, CA\",\n  \"finish\": \"Eureka, CA\",\n  \"include_geometry\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/route/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
